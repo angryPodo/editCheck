@@ -1,7 +1,7 @@
-import { BaseError } from "../../config/error";
-import { status } from "../../config/response.status";
-import { signinResponseDTO } from "../dtos/user.dto"
-import { addUser, getUser, getUserPreferToUserID, setPrefer } from "../models/user.dao";
+import { BaseError } from "../config/error.js";
+import { status } from "../config/response.status.js";
+import { signinResponseDTO } from "../dtos/user.response.dto.js"
+import { addUser, getUser, getUserPreferToUserID, setPrefer } from "../models/user.dao.js";
 
 export const joinUser = async (body) => {
     const birth = new Date(body.birthYear, body.birthMonth, body.birthDay);
@@ -18,9 +18,9 @@ export const joinUser = async (body) => {
         'prefer': prefer
     });
 
-    if(joinUserData == -1){
+    if (joinUserData == -1) {
         throw new BaseError(status.EMAIL_ALREADY_EXIST);
-    }else{
+    } else {
         for (let i = 0; i < prefer.length; i++) {
             await setPrefer(joinUserData, prefer[i]);
         }

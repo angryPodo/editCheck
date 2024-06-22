@@ -1,18 +1,18 @@
 // models/user.dao.js
 
-import { pool } from "../../config/db.config";
-import { BaseError } from "../../config/error";
-import { status } from "../../config/response.status";
+import { pool } from "../config/db.config.js";
+import { BaseError } from "../config/error.js";
+import { status } from "../config/response.status.js";
 import { connectFoodCategory, confirmEmail, getUserID, insertUserSql, getPreferToUserID } from "./user.sql.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
-    try{
+    try {
         const conn = await pool.getConnection();
-        
+
         const [confirm] = await pool.query(confirmEmail, data.email);
 
-        if(confirm[0].isExistEmail){
+        if (confirm[0].isExistEmail) {
             conn.release();
             return -1;
         }
@@ -21,8 +21,8 @@ export const addUser = async (data) => {
 
         conn.release();
         return result[0].insertId;
-        
-    }catch (err) {
+
+    } catch (err) {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 }
@@ -35,13 +35,13 @@ export const getUser = async (userId) => {
 
         console.log(user);
 
-        if(user.length == 0){
+        if (user.length == 0) {
             return -1;
         }
 
         conn.release();
         return user;
-        
+
     } catch (err) {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
@@ -51,11 +51,11 @@ export const getUser = async (userId) => {
 export const setPrefer = async (userId, foodCategoryId) => {
     try {
         const conn = await pool.getConnection();
-        
+
         await pool.query(connectFoodCategory, [foodCategoryId, userId]);
 
         conn.release();
-        
+
         return;
     } catch (err) {
         throw new BaseError(status.PARAMETER_IS_WRONG);
